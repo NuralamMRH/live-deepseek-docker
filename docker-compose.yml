@@ -43,7 +43,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        user: root
+        # user: root # only for Linux
         restart: unless-stopped
         ports:
            - '11434:11434'

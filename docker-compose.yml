@@ -1,7 +1,7 @@
 version: '3.4'
 
-# ///////////
-# Steps To Run (gpu need ROOT access like = sudo docker compose up)
+# ///////////   LINUX ONLY   ////////////
+# Steps To Run LINUX with gpu Acceleration (need ROOT access like = sudo docker compose up)
 # 1. Install Docker and NVIDIA Container Toolkit
 #  https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
 # sudo nvidia-ctk runtime configure --runtime=docker
@@ -12,7 +12,9 @@ version: '3.4'
 #  firs RUN:  docker pull nvidia/cuda:12.8.1-runtime-ubuntu24.04
 #  next To test if GPU acceleration is available, run the following command:
 #  docker run --rm --gpus all   nvidia/cuda:12.8.1-runtime-ubuntu24.04 nvidia-smi
-# 
+
+#  FINALLY RUN: sudo docker compose up
+# //////////////////////////////////////////////////////////////////
 
 services:
     openwebui:
@@ -41,6 +43,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+        user: root
         restart: unless-stopped
         ports:
            - '11434:11434'

@@ -2,7 +2,7 @@
 
 
 # Use a base image with CUDA support if using GPU, otherwise use Ubuntu
-FROM ubuntu:22.04
+FROM nvidia/cuda:12.8.1-runtime-ubuntu24.04
 
 # Set non-interactive mode to avoid prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive

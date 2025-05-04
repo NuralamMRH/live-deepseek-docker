@@ -1,18 +1,42 @@
 version: '3.4'
- 
+
+# ///////////
+# Steps To Run (gpu need ROOT access like = sudo docker compose up)
+# 1. Install Docker and NVIDIA Container Toolkit
+#  https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+# sudo nvidia-ctk runtime configure --runtime=docker
+# sudo systemctl restart docker
+
+
+# test if GPU acceleration is available
+#  firs RUN:  docker pull nvidia/cuda:12.8.1-runtime-ubuntu24.04
+#  next To test if GPU acceleration is available, run the following command:
+#  docker run --rm --gpus all   nvidia/cuda:12.8.1-runtime-ubuntu24.04 nvidia-smi
+# 
 
 services:
     openwebui:
-        image: ghcr.io/open-webui/open-webui:main
+        image: ghcr.io/open-webui/open-webui:v0.6.5
         restart: unless-stopped
         depends_on:
             - ollamadeepseek
+            - mcpo
         ports:
            - '8333:8080'
         volumes:
           - './open-webui:/app/backend/data'
         environment:
             OLLAMA_BASE_URL: http://ollamadeepseek:11434 
+
+    # Run dockerFile of MCPO 
+    mcpo:
+      build:
+        context: mcpo
+        dockerfile: Dockerfile
+      ports:
+        - '8334:8000'
+      
+
     ollamadeepseek: 
         build:
             context: .
@@ -26,7 +50,9 @@ services:
             OLLAMA_HOST: 0.0.0.0
             OLLAMA_PORT: 11434
             OLLAMA_MODELS: 
-        #  To use only CPU, Just  comment the following line or remove it
+            NVIDIA_VISIBLE_DEVICES: all
+            NVIDIA_DRIVER_CAPABILITIES: all,utility
+        runtime: nvidia
         deploy:
           resources:
             reservations:
@@ -34,3 +60,4 @@ services:
                 - driver: nvidia
                   count: all
                   capabilities: [gpu]
+        

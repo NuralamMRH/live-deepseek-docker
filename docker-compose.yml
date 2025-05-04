@@ -31,7 +31,7 @@ services:
     # Run dockerFile of MCPO 
     mcpo:
       build:
-        context: mcpo
+        context: mcpo_project
         dockerfile: Dockerfile
       ports:
         - '8334:8000'

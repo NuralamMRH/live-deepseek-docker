@@ -4,6 +4,7 @@ version: '3.4'
 # Steps To Run LINUX with gpu Acceleration (need ROOT access like = sudo docker compose up)
 # 1. Install Docker and NVIDIA Container Toolkit
 #  https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+# sudo apt-get install -y nvidia-container-toolkit
 # sudo nvidia-ctk runtime configure --runtime=docker
 # sudo systemctl restart docker
 
@@ -11,9 +12,26 @@ version: '3.4'
 # test if GPU acceleration is available
 #  firs RUN:  docker pull nvidia/cuda:12.8.1-runtime-ubuntu24.04
 #  next To test if GPU acceleration is available, run the following command:
-#  docker run --rm --gpus all   nvidia/cuda:12.8.1-runtime-ubuntu24.04 nvidia-smi
+
+#  For cuda 12.8 use this command:
+#  sudo docker run --rm --gpus all   nvidia/cuda:12.8.1-runtime-ubuntu24.04 nvidia-smi
+
+# For cuda 12.2 use this command:
+#  sudo docker run --rm --gpus all   nvidia/cuda:11.6.2-base-ubuntu20.04 nvidia-smi
 
 #  FINALLY RUN: sudo docker compose up
+
+
+# COMUN ERROR:
+# When your pc is on sleep mode or hibernation mode, the GPU will not be available for docker containers.
+# 1. Check if the GPU is available by running the following command:
+#  nvidia-smi
+# 2. If the GPU is still not available, restart the nvidia_uvm module by running the following command:
+#  sudo rmmod nvidia_uvm && sudo modprobe nvidia_uvm
+# 3 Restart Your PC :D
+
+
+
 # //////////////////////////////////////////////////////////////////
 
 services:

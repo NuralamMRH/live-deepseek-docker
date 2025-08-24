@@ -1,0 +1,23 @@
+{
+	"name": "deepseek-r1",
+	"parameters": {
+		"temperature": 0.7,
+		"top_k": 50,
+		"top_p": 0.95,
+		"repeat_penalty": 1.1,
+		"seed": 42,
+		"num_predict": 512,
+		"stop": [
+			"</s>",
+			"Human:",
+			"Assistant:"
+		],
+		"tfs_z": 1,
+		"num_ctx": 8192,
+		"image_format": "auto",
+		"image_quality": 100,
+		"vision_model": "llava",
+		"vision_scale": 1.0,
+		"vision_tokens": 576
+	}
+}

@@ -1,0 +1,75 @@
+version: "3.8"
+
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:v0.6.15
+    restart: unless-stopped
+    depends_on:
+      - ollamadeepseek
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui-data:/app/backend/data
+      - ./uploads:/app/backend/uploads
+    environment:
+      - OLLAMA_API_BASE_URL=http://ollamadeepseek:11434
+      - OLLAMA_BASE_URL=http://ollamadeepseek:11434
+      - APP_NAME=RanAi
+      - CUSTOM_TITLE=RanAi - Your AI Assistant
+      - CUSTOM_DESCRIPTION=Welcome to RanAi - Powered by Rancoded
+      - HOST=0.0.0.0
+      - PORT=8080
+      - WEBUI_URL=http://ranai.rancoded.com
+      - API_HOST=0.0.0.0
+      - API_PORT=8080
+      - CORS_ALLOW_ORIGINS=http://ranai.rancoded.com,http://ranaibackend.rancoded.com
+      - ENABLE_SIGNUP=true
+      - DEFAULT_USER_ROLE=admin
+      - UPLOAD_PATH=/app/backend/uploads
+      - ENABLE_IMAGE_UPLOAD=true
+      - MAX_UPLOAD_SIZE=20971520
+      - ENABLE_VISION=true
+      - VISION_MODEL=llava
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+
+  ollamadeepseek:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+      - ./ollama.json:/root/.ollama/config.json
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_PORT=11434
+      - OLLAMA_MODELS=deepseek-coder:latest,deepseek-r1:latest
+      - OLLAMA_VERBOSE=true
+      - OLLAMA_VISION=true
+    deploy:
+      resources:
+        limits:
+          cpus: "1.8"
+          memory: 7G
+        reservations:
+          cpus: "0.5"
+          memory: 6G
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  open-webui-data:
+  ollama-data:
